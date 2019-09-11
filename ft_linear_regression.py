@@ -4,7 +4,7 @@
 #                                                                              #
 #  By - jacksonwb                                                              #
 #  Created: Wednesday December 1969 4:00:00 pm                                 #
-#  Modified: Wednesday Sep 2019 2:15:46 pm                                     #
+#  Modified: Wednesday Sep 2019 4:21:41 pm                                     #
 #  Modified By: jacksonwb                                                      #
 # ---------------------------------------------------------------------------- #
 
@@ -15,6 +15,8 @@ import pandas  as pd
 def parse():
 	parser = argparse.ArgumentParser(description='Simple linear regression model')
 	parser.add_argument('-t', '--train', action='store_true')
+	parser.add_argument('-p', '--plot', action='store_true')
+	parser.add_argument('-a', '--animate', action='store_true')
 	parser.add_argument('input')
 	return parser.parse_args()
 
@@ -31,7 +33,7 @@ if __name__ == '__main__':
 	lin_reg_model = LinReg()
 	if args.train:
 		data = get_data(args.input)
-		lin_reg_model.train(data['km'], data['price'],.1, 1000, plot=True)
+		lin_reg_model.train(data['km'], data['price'],.1, 500, plot=args.plot, animate=args.animate)
 		lin_reg_model.save_model()
 	else:
 		lin_reg_model.load_model()

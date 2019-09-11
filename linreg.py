@@ -4,7 +4,7 @@
 #                                                                              #
 #  By - jacksonwb                                                              #
 #  Created: Wednesday December 1969 4:00:00 pm                                 #
-#  Modified: Wednesday Sep 2019 2:30:08 pm                                     #
+#  Modified: Wednesday Sep 2019 4:19:46 pm                                     #
 #  Modified By: jacksonwb                                                      #
 # ---------------------------------------------------------------------------- #
 
@@ -34,21 +34,38 @@ def solve_point	(x, params, width, min_val):
 	x_norm = normalize_point(x, width, min_val)
 	return x_norm * params[0] + params[1]
 
+def solve_norm_range(X_norm, params):
+	return(X_norm * params[0] + params[1])
+
+
 class LinReg:
 	def __init__(self):
 		self.solved = False
-	def train(self, X, Y, learning_rate, max_iter, plot=False):
+	def train(self, X, Y, learning_rate, max_iter, plot=False, animate=False):
 		params = [0, 0]
 		X_norm = normalize(X)
+		if animate:
+			plt.ion()
+			fig, ax = plt.subplots()
+			# plt.scatter(X, Y)
 		for i in range(max_iter):
 			params = step_gradient(X_norm, Y, params, learning_rate)
+			if animate:
+				plt.cla()
+				plt.scatter(X, Y)
+				plt.plot(X, solve_norm_range(X_norm, params), 'r-')
+				plt.text(0, 1.05, f'iterations={i}', transform=ax.transAxes)
+				plt.draw()
+				plt.pause(0.000000001)
 		self.params = params.tolist()
 		self.min_val = np.min(X)
 		self.width = np.max(X) - self.min_val
 		self.solved = True
+		if animate:
+			plt.ioff()
 		if plot:
 			plt.scatter(x=X, y=Y)
-			plt.plot(X, X_norm * params[0] + params[1])
+			plt.plot(X, X_norm * params[0] + params[1], 'r-')
 			plt.show()
 	def save_model(self, model_name='lin_reg_model.csv'):
 		if not self.solved:
